@@ -7,6 +7,7 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
     }
     return t;
 };
+Object.defineProperty(exports, "__esModule", { value: true });
 var ts = require("typescript");
 var glob = require("glob");
 var path = require("path");
@@ -456,7 +457,11 @@ var JsonSchemaGenerator = (function () {
             }
             if (this.args.generateRequired) {
                 var requiredProps = props.reduce(function (required, prop) {
-                    if (!(prop.flags & ts.SymbolFlags.Optional) && !prop.mayBeUndefined) {
+                    if (!(prop.flags & ts.SymbolFlags.Optional)
+                        && !prop.mayBeUndefined
+                        && prop['tags'].find(function (x) {
+                            return x.name === 'ignore';
+                        }) === undefined) {
                         required.push(prop.getName());
                     }
                     return required;
